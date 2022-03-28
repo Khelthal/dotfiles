@@ -1,0 +1,8 @@
+#!/bin/bash
+
+centermenuRunning=$(eww windows | grep "*centermenu")
+if [ "$centermenuRunning" != "" ]; then
+  echo "running"
+else
+  echo "not running"
+fi

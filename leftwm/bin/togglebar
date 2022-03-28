@@ -1,0 +1,12 @@
+#!/bin/sh
+barstatus=$(eww windows | grep *topbar)
+background=$(cat ~/.config/leftwm/themes/current/colorscheme.scss | grep [\$]background: | awk '{print $2}' | sed 's/;//g' | sed 's/#/0x/g')
+
+if [ $barstatus != "" ]; then
+  pkill trayer
+  eww close topbar
+else
+  trayer --edge top --align center --width 5 --alpha 0 --tint $background --transparent true --distance 20 --expand true &
+  sleep 0.1
+  eww open topbar
+fi

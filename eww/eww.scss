@@ -1,0 +1,204 @@
+@import '../leftwm/themes/current/colorscheme.scss';
+
+* {
+  all: unset;
+  font-family: "JetBrainsMonoExtraBold Nerd Font";
+}
+
+.background {
+  color: $background
+}
+
+.box {
+  padding: 0px 8px 0px 8px;
+}
+
+.foreground {
+  color: $foreground;
+}
+
+.red {
+  color: $red;
+}
+
+.green {
+  color: $green;
+}
+
+.yellow {
+  color: $yellow;
+}
+
+.blue {
+  color: $blue;
+}
+
+.magenta {
+  color: $magenta;
+}
+
+.cyan {
+  color: $cyan;
+}
+
+.orange {
+  color: $orange;
+}
+
+.bg-background {
+  background-color: $background
+}
+
+.bg-foreground {
+  background-color: $foreground;
+}
+
+.bg-red {
+  background-color: $red;
+}
+
+.bg-green {
+  background-color: $green;
+}
+
+.bg-yellow {
+  background-color: $yellow;
+}
+
+.bg-blue {
+  background-color: $blue;
+}
+
+.bg-magenta {
+  background-color: $magenta;
+}
+
+.bg-magenta-bright {
+  background-color: $magenta-bright;
+}
+
+.bg-cyan {
+  background-color: $cyan;
+}
+
+.bg-orange {
+  background-color: $orange;
+}
+
+.bar.red trough highlight {
+  background-color: $red;
+}
+
+.bar.green trough highlight {
+  background-color: $green;
+}
+
+.bar.yellow trough highlight {
+  background-color: $yellow;
+}
+
+.bar.blue trough highlight {
+  background-color: $blue;
+}
+
+.bar.magenta trough highlight {
+  background-color: $magenta;
+}
+
+.bar.cyan trough highlight {
+  background-color: $cyan;
+}
+
+.bar.orange trough highlight {
+  background-color: $orange;
+}
+
+.mega-icon {
+  font-size: 35px;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+.semi-icon {
+  font-size: 14px;
+}
+
+.button {
+  min-width: 25px;
+}
+
+.vbar trough {
+  background-color: #4e4e4e;
+  border-radius: 2px;
+  min-width: 6px;
+}
+
+.vbar trough highlight {
+  border-radius: 2px;
+  min-width: 6px;
+}
+
+.hbar trough {
+  background-color: #4e4e4e;
+  border-radius: 2px;
+  min-width: 50px;
+  min-height: 8px;
+}
+
+.hbar trough highlight {
+  border-radius: 2px;
+  min-height: 6px;
+}
+
+.button:hover {
+  color: $red;
+}
+
+.button:active {
+  color: $blue;
+}
+
+.topbar {
+  background-color: $background;
+  color: $foreground;
+  padding: 11px;
+}
+
+.workspaces button:hover {
+  color: $red;
+}
+
+.ws-button-mine {
+  color: $red;
+  border: 10px;
+}
+
+.ws-button-visible {
+  color: $red;
+}
+
+.ws-button {
+  color: #464c58;
+}
+
+.menu {
+  background-color: $background;
+  color: $foreground;
+}
+
+.menuarea {
+  background-color: $background-bright;
+  margin: 12px;
+  border-radius: 10px;
+}
+
+.menubutton {
+  margin: 12px;
+}
+
+.thememenu {
+  background-color: $background;
+  color: $foreground;
+}

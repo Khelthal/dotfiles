@@ -1,0 +1,14 @@
+{{'(box :class "icon" "'}}
+{% case workspace.layout %}
+{% when "MainAndVertStack" %}
+  {{''}}
+{% when "MainAndHorizontalStack" %}
+  {{''}}
+{% when "CenterMain" %}
+  {{''}}
+{% when "GridHorizontal" %}
+  {{''}}
+{% else %}
+  {{workspace.layout}}
+{% endcase %}
+{{'")'}}

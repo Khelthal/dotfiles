@@ -1,0 +1,52 @@
+Config {
+     font     = "xft:JetBrainsMono Nerd Font:size=10:bold"
+   , bgColor  = "#1E222A"
+   , fgColor  = "#f8f8f2"
+   , position = TopW L 95
+
+     -- layout
+   , sepChar =  "%"   -- delineator between plugin names and straight text
+   , alignSep = "}{"  -- separator between left-right alignment
+   , template = "%XMonadLog% }{%mpd%   <fc=#d19a66>%volume%</fc>   %dynnetwork%   %disku%   %cpu%   %memory%   %date%"
+
+     -- general behavior
+   , lowerOnStart =     True    -- send to bottom of window stack on start
+   , hideOnStart =      False   -- start with window unmapped (hidden)
+   , allDesktops =      True    -- show on all desktops
+   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+   , pickBroadest =     False   -- choose widest display (multi-monitor)
+   , persistent =       True    -- enable/disable hiding (True = disabled)
+
+   , commands = 
+        [ Run Cpu            [ "-L", "3"
+                             , "-H", "50"
+                             , "--template", "<fc=#98c379> <total>%</fc>"
+                             ] 10
+
+        , Run DiskU          [("/", "<fc=#e5c07b> <used>/<size></fc>")]
+                             [ "-L", "3"
+                             , "-H", "50"
+                             , "--template", "<fc=#98c379> <total>%</fc>"
+                             ] 10
+
+        , Run MPD            [ "-t", "<fc=#56b6c2><statei> <artist> - <title></fc>"
+                             , "--", "-P", "", "-Z", "", "-S", ""] 10
+
+        , Run Memory         [ "--template", "<fc=#61AFEF> <usedratio>%</fc>"
+                             ] 10
+
+        , Run Date           "<fc=#D47D85> %m-%d %H:%M</fc>" "date" 10
+
+        , Run DynNetwork     [ "--template", "<fc=#c678dd>直 <rx>KB|<tx>KB</fc>"
+                             ] 10
+
+        , Run Com "pulseaudio-control" [ "--icons-volume", " ,"
+                                       , "--sink-nickname", "alsa_output.pci-0000_01_00.1.hdmi-stereo:蓼"
+                                       , "--sink-nickname", "alsa_output.pci-0000_00_1b.0.analog-stereo:"
+                                       , "--format", "$SINK_NICKNAME $VOL_LEVEL%"
+                                       , "output"
+                                       ] "volume" 5
+
+        , Run XMonadLog
+        ]
+}

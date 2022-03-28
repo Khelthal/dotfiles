@@ -1,0 +1,314 @@
+; TOPBAR
+
+(defwidget bar []
+  (centerbox
+    :orientation "h"
+    :valign "center"
+    (left)
+    (center)
+    (right)))
+
+(defwidget left []
+  (box
+    :orientation "h"
+    :space-evenly "false"
+    :halign "start"
+    :spacing 10
+    (workspaces)
+    (layout)))
+
+(defwidget center []
+  (box
+    :orientation "h"
+    :space-evenly "false"
+    :halign "center"
+    :spacing 20))
+
+(defwidget right []
+  (box
+    :orientation "h"
+    :space-evenly "false"
+    :halign "end"
+    :spacing 18
+    (music)
+    (soundbar)
+    (twoboxes
+      :foreground1 "background"
+      :background1 "magenta"
+      :value1 '${(wifinetwork == "") ? "睊" : "直"}'
+      :foreground2 "background"
+      :background2 "magenta-bright"
+      :value2 '${(wifinetwork == "") ? "Disconnected" : "${wifinetwork}"}')
+    (vbar
+      :color "green"
+      :value {round(EWW_CPU.avg, 0)}
+      :icon "")
+    (vbar
+      :color "yellow"
+      :value {round(EWW_RAM.used_mem_perc, 0)}
+      :icon "")
+    (vbar
+      :color "orange"
+      :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
+      :icon "")
+    (time)
+    (button
+      :class "icon button"
+      :onclick `toggleewwmenu`
+      {(gettrayerstatus == "running") ? "" : ""})))
+
+(defwidget workspaces []
+  (box
+    :class "workspaces"
+    :orientation "h"
+    :space-evenly "false"
+    :halign "start"
+    :spacing 20
+    (literal
+      :content {wm-tags})))
+
+(defwidget layout []
+  (box
+    :class "blue"
+    :orientation "h"
+    :space-evenly "false"
+    :halign "start"
+    :spacing 20
+    (literal
+      :content {layout-name})))
+
+(defwidget music []
+  (box
+    :spacing 5
+    :class "cyan"
+    (button
+      :class "icon button"
+      :onclick `mpc prev`
+      "")
+    (button
+      :class "icon button"
+      :onclick `mpc toggle`
+      {(playingstatus == "paused") ? "" : ""})
+    (button
+      :class "icon button"
+      :onclick `mpc next`
+      "")))
+
+(defwidget time []
+  (box
+    :orientation "h"
+    :space-evenly "false"
+    :halign "start"
+    :spacing 15
+    :class "red"
+    (button
+      :class "icon"
+      :spacing 0
+      "")
+    (box
+      :class "semi-icon"
+      "${gettime}")))
+
+(defwidget soundbar []
+  (box
+    :orientation "h"
+    :space-evenly "false"
+    :halign "start"
+    :spacing 5
+    (button
+      :class "icon green button"
+      :spacing 0
+      :onclick `pulseaudio-control togmute`
+      :onrightclick `next-sink`
+      "${sinkicon}")
+    (scale
+      :class "bar hbar green"
+      :orientation "h"
+      :min 0
+      :max 101
+      :active true
+      :onchange "pulsemixer --set-volume {}"
+      :value {volume})))
+
+(defwidget vbar [color value icon ?onchange]
+  (box
+    :orientation "h"
+    :space-evenly "false"
+    :halign "start"
+    :spacing 12
+    :class "${color}"
+    (button
+      :class "icon"
+      :spacing 0
+      "${icon}")
+    (scale
+      :class "bar vbar ${color}"
+      :orientation "v"
+      :min 0
+      :max 101
+      :onchange onchange
+      :active false
+      :value value
+      :flipped true)))
+
+(defwidget twoboxes [foreground1 foreground2 background1 background2 value1 value2]
+  (box
+    :orientation "h"
+    :space-evenly "false"
+    :halign "center"
+    :spacing 0
+    (box
+      :class "icon ${foreground1} bg-${background1} box"
+      :spacing 0
+      :halign "center"
+      "${value1}")
+    (box
+      :class "semi-icon ${foreground2} bg-${background2} box"
+      :spacing 0
+      :halign "center"
+      "${value2}")))
+
+(deflisten wm-tags
+  "leftwm-state -w 0 -t ~/.config/leftwm/themes/current/template.liquid")
+
+(deflisten layout-name
+  "leftwm-state -w 0 -t ~/.config/leftwm/themes/current/layout.liquid")
+
+(defpoll playingstatus
+  :interval "200ms"
+  `getplayingstatus`)
+
+(defpoll gettrayerstatus
+  :interval "200ms"
+  `gettrayerstatus`)
+
+(defpoll gettime
+  :interval "1s"
+  `date +"%m-%d %H:%M"`)
+
+(defpoll sinkicon
+  :interval "1s"
+  `getsinkicon`)
+
+(defpoll wifinetwork
+  :interval "1s"
+  `nmcli | grep conectado | awk '{print $4}'`)
+
+(defpoll volume
+  :interval "200ms"
+  `pulsemixer --get-volume | awk '{print $1}'`)
+
+(defwindow topbar
+  :monitor 0
+  :windowtype "dock"
+  :stacking "bg"
+  :geometry (geometry
+              :x "0%"
+              :y "1%"
+              :width "85%"
+              :height "44px"
+              :anchor "top center")
+  :reserve (struts
+             :side "top"
+             :distance "5%")
+  (bar))
+
+; MENU
+
+(defwidget menu []
+  (box
+    :orientation "v"
+    :class "menu"
+    (box
+      (box
+        :class "icon"
+        (image
+          :class "menuarea"
+          :path "../leftwm/images/voidlogo.png"
+          :image-width 120
+          :image-height 120)
+        (button
+          :class "menuarea mega-icon button cyan"
+          :onclick "eww open themes"
+          "")))
+    (box
+      (box
+        (box
+          :class "menuarea"
+          (button
+            :class "button menubutton mega-icon blue"
+            :onclick `loginctl kill-session $XDG_SESSION_ID`
+            "")
+          (button
+            :class "button menubutton mega-icon green"
+            :onclick `loginctl reboot`
+            "")
+          (button
+            :class "button menubutton mega-icon  yellow"
+            :onclick `loginctl poweroff`
+            "")
+          )))
+    ))
+
+
+(defwindow centermenu
+  :monitor 0
+  :windowtype "normal"
+  :stacking "fg"
+  :wm-ignore true
+  :geometry (geometry
+              :x "0%"
+              :y "0%"
+              :width "400px"
+              :height "350px"
+              :anchor "center")
+  (menu))
+
+; THEME
+
+(defwidget thememenu []
+  (eventbox
+    :onscroll `eww update themeindex=$(expr $(expr $(eww get themeindex) + 1) % $(get-themes | wc -w))`
+    (box
+      :orientation "v"
+      :class "thememenu"
+      (button
+        :class "icon button menuarea"
+        :onclick `set-theme 1`
+        firsttheme)
+      (button
+        :class "icon button menuarea"
+        :onclick `set-theme 2`
+        secondtheme)
+      (button
+        :class "icon button menuarea"
+        :onclick `set-theme 3`
+        thirdtheme))))
+
+
+(defpoll firsttheme
+  :interval "100ms"
+  `get-theme 1`)
+
+(defpoll secondtheme
+  :interval "100ms"
+  `get-theme 2`)
+
+(defpoll thirdtheme
+  :interval "100ms"
+  `get-theme 3`)
+
+(defvar themeindex 0)
+
+(defwindow themes
+  :monitor 0
+  :windowtype "normal"
+  :stacking "fg"
+  :wm-ignore true
+  :geometry (geometry
+              :x "400px"
+              :y "0%"
+              :width "250px"
+              :height "400px"
+              :anchor "center")
+  (thememenu))
